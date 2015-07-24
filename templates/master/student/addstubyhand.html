@@ -1,0 +1,57 @@
+{% extends 'master/base.html' %}
+{% block title %}后台管理{% endblock %}
+{% block content %}
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    {% if message %}
+        <h3 class="sub-header">{{ message }}</h3>
+    {% endif %}
+    {% if student %}
+        <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>姓名</th>
+                  <th>学号</th>
+                  <th>年级</th>
+                  <th>班级</th>
+                  <th>专业</th>
+                  <th>电话</th>
+                  <th>账户状态</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                    <td>{{ student.stu_name }}</td>
+                    <td>{{ student.stu_auth_num }}</td>
+                    <td>{{ student.stu_grade }}</td>
+                    <td>{{ student.stu_class }}</td>
+                    <td>{{ student.stu_major }}</td>
+                    <td>{{ student.stu_phone }}</td>
+                    {% if stu.is_active %}
+                        <td>活动</td>
+                        <td><a href="/master/forbidonestudent/{{ stu.stu_auth_num }}" target="_blank">禁用</a>
+                    {% endif %}
+                    {% if not stu.is_active %}
+                        <td>禁用</td>
+                        <td><a href="/master/activeonestudent/{{ stu.stu_auth_num }}" target="_blank">激活</a>
+                    {% endif %}
+                    <td><a href="/master/editstuinfo/{{ stu.stu_auth_num }}" target="_blank">修改资料</a></td>
+                </tr>
+               </tbody>
+            </table>
+        </div>
+    {% endif %}
+    {% if form %}
+    <form action="{% url 'master:addstubyhand' %}" method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input value="添加" type="submit"/>
+    </form>
+    {% endif %}
+    {% if message and not form  %}
+        <form action="{% url 'master:addstubyhand' %}" method="GET">
+        <input type="submit" value="继续添加"/>
+        </form>
+    {% endif %}
+    </div>
+{% endblock %}

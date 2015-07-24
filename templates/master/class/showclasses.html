@@ -1,0 +1,48 @@
+{% extends 'master/base.html' %}
+{% block title %}后台管理{% endblock %}
+{% block content %}
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    {% if class_list %}
+        <h3 class="sub-header">当前学期课程</h3>
+        <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>课程编号</th>
+                  <th>课程名称</th>
+                  <th>课程学时</th>
+                  <th>面向年级</th>
+                  <th>指导教师</th>
+                  <th>添加日期</th>
+                  <th>已选人数</th>
+                  <th>课程状态</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for clas in class_list %}
+                    <tr>
+                        <td>{{ clas.class_id }}</td>
+                        <td><a href="/master/editclass/{{ clas.class_id }}/"> {{ clas.class_name }}</a></td>
+                        <td>{{ clas.class_hours }}</td>
+                        <td>{{ clas.class_for }}</td>
+                        <td>
+                            {{ clas.teacher_list }}
+                        </td>
+                        <td>{{ clas.add_date|date:"Y,n月j日,G:i" }}</td>
+                        <td>{{ clas.stu_num_now }}</td>
+                        <td>{{ clas.is_allowed_choose}}</td>
+{#                    {% url '/master/classdetail/' %}#}
+                    </tr>
+                {% endfor %}
+               </tbody>
+            </table>
+        </div>
+    {% endif %}
+        <h3 class="sub-header">其他学期课程</h3>
+        <form action="{% url 'master:showotherclasses' %}" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="查询"/>
+        </form>
+    </div>
+{% endblock %}

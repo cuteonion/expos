@@ -1,0 +1,19 @@
+{% extends 'student/base.html' %}
+{{% block content %}
+    {% load static %}
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    {% if message %}
+        {{ message }}
+    {% endif %}
+    {% if form %}
+        <form action="{% url 'student:myinfo' %}" method="POST">
+            {% csrf_token %}
+            <strong></strong>
+            <h4 class="sub-header">{{ student.stu_auth_num }}</h4>
+            <br>
+            {{ form.as_p }}
+            <input type="submit" value="确认修改"/>
+        </form>
+    {% endif %}
+    </div>
+{% endblock %}

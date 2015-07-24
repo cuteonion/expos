@@ -1,0 +1,17 @@
+{% extends 'master/base.html' %}
+{% block title %}添加类别{% endblock %}
+{{% block content %}
+    {% load static %}
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <h4 class="sub-header">编辑类别名称</h4>
+        <form method="post" action="/master/editcategory/{{ category.id }}/" >
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="添加"/>
+        </form>
+        <h4 class="sub-header">其他类别</h4>
+        {% for category in category_list %}
+            <b><p>{{ category }}</p></b> <a href="/master/editcategoty/{{ category.id }}/">修改</a>
+        {% endfor %}
+    </div>
+{% endblock %}

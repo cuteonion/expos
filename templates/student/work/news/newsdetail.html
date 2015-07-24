@@ -1,0 +1,11 @@
+{% extends 'student/base.html' %}
+{% block title %}个人中心{% endblock %}
+{{% block content %}
+    {% load static %}
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <h4 class="sub-header">{{ news.title }}</h4>
+        <h5 class="sub-header">发布人:{{ news.author }}&nbsp;&nbsp;&nbsp;时间:{{ news.create_date|date:"Y,n月j日,G:i" }}</h5>
+        {{ news.context }}
+        {{ news.attachment.url }}
+    </div>
+{% endblock %}

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  {% load staticfiles %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=50%, initial-scale=1">
+{#    <meta name="description" content="">#}
+{#    <meta name="author" content="">#}
+    <title>{% block title %}管理员登录{% endblock %}</title>
+       <link href="{% static 'bootstrap/css/bootstrap.min.css'%}" rel="stylesheet">
+   </head>
+   <body>
+   <div class="container" align="center">
+    <form class="form-signin" action="{% url 'master:login' %}" method="post">
+        <h2 class="form-signin-heading">管理员登录</h2>
+        {{ error_message }}
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="checkbox">
+          <label><input type="checkbox" value="remember-me"> 记住我</label>
+        </div>
+    <button class="btn btn-lg btn-primary " type="submit">登录</button>
+    </form>
+    </div>
+  </body>
+</html>

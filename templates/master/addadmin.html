@@ -1,0 +1,56 @@
+{% extends 'master/base.html' %}
+{% block title %}后台管理{% endblock %}
+{% block content %}
+    {% load static %}
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    {% if message %}
+        <h3 class="sub-header">{{ message }}</h3>
+    {% endif %}
+    {% if form %}
+        <form action="{% url 'master:addadmin' %}" method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="添加">
+        </form>
+    {% endif %}
+    {% if admin_list %}
+        <h3 class="sub-header">管理员列表</h3>
+        <h3 class="sub-header">管理员列表</h3>
+        <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>教师姓名</th>
+                  <th>登录账号</th>
+                  <th>用户类型</th>
+                  <th>用户状态</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for admin in admin_list %}
+                    <tr>
+                        <td>{{ admin.admin_name }}</td>
+                        <td>{{ admin.username }}</td>
+                        {% if admin.admin_type == 1 %}
+                        <td>管理员</td>
+                        {% endif %}
+                        {% if admin.admin_type == 2 %}
+                        <td>教师</td>
+                        {% endif %}
+                        {% if admin.is_active %}
+                        <td>可用</td>
+                        <td><a href="/master/forbidadmin/{{ admin.username }}/">禁用</a>
+                        {% endif %}
+                        {% if not admin.is_active %}
+                        <td>不可用</td>
+                        <td><a href="/master/forbidadmin/{{ admin.username }}/">禁用</a>
+                        {% endif %}
+                        <td><a href="/master/editadmin/{{ admin.username }}/">资料编辑</a></td>
+                    </tr>
+                {% endfor %}
+               </tbody>
+            </table>
+        </div>
+    {% endif %}
+    </div>
+{% endblock %}

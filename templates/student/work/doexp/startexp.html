@@ -1,0 +1,20 @@
+{% extends 'student/base.html' %}
+{% block title %}个人中心{% endblock %}
+{{% block content %}
+    {% load static %}
+
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <h3 class="sub-header">今天已选的实验时间:</h3>
+        {% if not stu_sel_time_today %}
+            <h4 class="sub-header">您并未选择当前实验时间，请选择实验时间或联系知道老师</h4>
+        {% endif %}
+    {% if stu_sel_time_today %}
+        {% for stu_sel_time in stu_sel_time_today %}
+            <h4 class="sub-header"><a href="/student/doexp/{{ stu_sel_time.exproom_id.classroomid }}">{{ stu_sel_time.exproom_id }}</a> （教室:{{ stu_sel_time.exproom_id.roomnum }} / 座位号:{{ stu_sel_time.seat_num }}）</h4>
+        {% endfor %}
+    {% endif %}
+    {% if no_time_message %}
+        <h4 class="sub-header">{{ no_time_message }}</h4>
+    {% endif %}
+    </div>
+{% endblock %}

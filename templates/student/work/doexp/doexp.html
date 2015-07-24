@@ -1,0 +1,50 @@
+{% extends 'student/base.html' %}
+{% block title %}个人中心{% endblock %}
+{{% block content %}
+    {% load static %}
+    <script>
+        function beforeSubmit(form){
+            return confirm('您开始实验的时间和登录IP将被记录为您本次实验的签到记录，开始实验以后无法撤销。您是否确定要开始实验？');
+        }
+
+    </script>
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        {% if not start %}
+            <h3 class="sub-header">提醒</h3>
+            <h4 style="color: #ff0000" class="sub-header">1.开始实验之前请选择本次实验对应的课程，开始实验之后无法更改课程信息。</h4>
+            <h4 style="color: #ff0000" class="sub-header">2.点击“开始实验”按钮开始实验，您开始实验的时间和登录IP将被记录为您本次实验的签到记录，开始实验以后无法撤销。</h4>
+        <form onsubmit="return beforeSubmit(this)" method="post" action="/student/doexp/{{ do_exproom.exproom_id.classroomid }}/" >
+            {% csrf_token %}
+            <h3 class="sub-header">请选择实验课程:</h3>
+            <select name="class_name">
+                {% if stu_classes %}
+                    {% for objects, hours in stu_classes %}
+                        <option value="{{ objects.class_id.class_id }}">{{ objects.class_id }}(还需完成{{ hours }}学时)</option>
+                    {% endfor %}
+                {% endif %}
+            </select>
+            <input type="submit" value="开始实验">
+            <h5 class="sub-header">注:本次实验为{{ do_exproom.hours }}学时</h5>
+        </form>
+        {% endif %}
+        {% if start %}
+            {% if error_message %}
+                <script>alert('{{error_message}}')</script>
+            {% endif %}
+            本次实验课程为:&nbsp;&nbsp;<h4 class="sub-header">{{ stu_do_exp.stu_class.class_id.class_name }}</h4>
+            本次实验学时为:&nbsp;&nbsp;<h4 class="sub-header">{{ stu_do_exp.stuseltime_id.hours }}个学时</h4>
+            签到时间为:&nbsp;&nbsp;<h4 class="sub-header">{{ stu_do_exp.start_time|date:"Y,n月j日,G:i" }}</h4>
+            您的登录ip为:&nbsp;&nbsp;<h4 class="sub-header">{{ stu_do_exp.stu_start_ip }}</h4>
+            <h5 style="color: #ff0000" class="sub-header">完成实验后需提交本次实验的实验记录，请在实验室内部网络上提交，未经指导教师允许，在实验室之外提交的实验记录无效。</h5>
+            <form enctype="multipart/form-data" method="post" action="/student/doexp/{{ stu_do_exp.stuseltime_id.exproom_id.classroomid }}/">
+                {% csrf_token %}
+                {{ form2.as_p }}
+                <input type="submit" value="提交">
+            </form>
+            {% if stu_do_exp.is_finished %}
+                <a href="{{ stu_do_exp.stu_exp_report.url }}" target="_blank">您已经提交了实验报告，点此查看</a><br>
+                <p style="color: #ff0000">如果需要重新提交，请再次上传，之前提交的版本将自动删除。</p>
+            {% endif %}
+        {% endif %}
+    </div>
+{% endblock %}

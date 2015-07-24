@@ -1,0 +1,45 @@
+{% extends 'student/base.html' %}
+{% block title %}个人中心{% endblock %}
+{{% block content %}
+    {% load static %}
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+         <h4 class="sub-header">实验详情</h4>
+             {% if stu_do_exp_list %}
+                <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>实验时间</th>
+                    <th>实验内容</th>
+                    <th>实验学时</th>
+                    <th>签到时间</th>
+                    <th>登录地址</th>
+                    <th>结束时间</th>
+                    <th>实验报告</th>
+                    <th>教师评分</th>
+                    <th>教师留言</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for stu_do_exp in stu_do_exp_list %}
+                    <tr>
+                       <td>{{ stu_do_exp.stuseltime_id }}</td>
+                        <td>{{ stu_do_exp.stu_class.class_id.class_name }}</td>
+                        <td>{{ stu_do_exp.stuseltime_id.hours }}</td>
+                       <td>{{ stu_do_exp.start_time|date:"Y/n/j,G:i" }}</td>
+                        <td>{{  stu_do_exp.stu_start_ip }}</td>
+                       <td>{{ stu_do_exp.end_time|date:"Y/n/j,G:i" }}</td>
+                        {%  if stu_do_exp.is_finished %}
+                            <td><a href="{{ stu_do_exp.stu_exp_report.url }}">点击查看</a></td>
+                        {% endif %}
+                        {%  if not stu_do_exp.is_finished %}
+                            <td>未提交</td>
+                        {% endif %}
+                        <td>{{ stu_do_exp.exp_grade }}</td>
+                        <td>{{ stu_do_exp.comment }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                </table>
+            {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'master/base.html' %}
+{% block title %}添加新闻{% endblock %}
+{{% block content %}
+    {% load static %}
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <h3 class="sub-header">发布新闻</h3>
+        <form enctype="multipart/form-data" method="post" action="/master/editnews/{{ news.id }}/">
+            {% csrf_token %}
+            {{ form.media }}
+            {{ form.as_p }}
+            {% if news.attachment %}
+                <a href="{{ news.attachment.url }}" target="_blank">查看附件</a>
+            {% endif %}
+            <input type="submit" value="发布"/>
+        </form>
+    </div>
+{% endblock %}

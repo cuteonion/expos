@@ -1,0 +1,11 @@
+
+{% block content %}
+    {% if category_news %}
+    <ul>
+    {% for objects in category_news %}
+        <li><a href="/detail/{{ objects.id }}">{{ objects.title }}</a></li>
+    {% endfor %}
+
+    </ul>
+    {% endif %}
+{% endblock %}

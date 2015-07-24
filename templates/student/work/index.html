@@ -1,0 +1,12 @@
+{% extends 'student/base.html' %}
+{% block title %}个人中心{% endblock %}
+{% block content %}
+    {% load static %}
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+       <ul>
+           {% for news in news_list %}
+           <li><a href="/student/viewcategory/{{ news.category.id }}" target="_blank">{{ news.category.name }}&nbsp;&nbsp;&nbsp; <a href="/student/newsdetail/{{ news.id }}/" target="_blank" >{{ news.title }}</a></li>
+           {% endfor %}
+       </ul>
+    </div>
+{% endblock %}

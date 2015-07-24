@@ -1,0 +1,17 @@
+{% extends 'master/base.html' %}
+{% block title %}个人中心{% endblock %}
+{{% block content %}
+    {% load static %}
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        {% if message %}
+        <h4 class="sub-header">{{ message }}</h4>
+        {% endif %}
+        <h3 class="sub-header">实验时间编辑</h3>
+        <form method="post" action="/master/editexproom/{{ exproom.classroomid }}/">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="hidden" value="{{ exproom.classroomid }}" name="exproomid">
+            <input type="submit" value="修改">
+        </form>
+    </div>
+{% endblock %}

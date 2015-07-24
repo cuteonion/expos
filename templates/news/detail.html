@@ -1,0 +1,9 @@
+
+{% block content %}
+    {% if news %}
+        {{ news.title }}
+        <br>
+        发布人：{{ news.author.name }}&nbsp;&nbsp;发布时间：{{ news.create_date|date:"Y,n月j日,G:i" }}
+        {{ news.contents }}
+    {% endif %}
+{% endblock %}

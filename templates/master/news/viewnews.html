@@ -1,0 +1,47 @@
+{% extends 'master/base.html' %}
+{% block title %}个人中心{% endblock %}
+{{% block content %}
+    {% load static %}
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <h3 class="sub-header">公告列表</h3>
+        <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>类别</th>
+                  <th>标题</th>
+                  <th>发布人</th>
+                  <th>发布时间</th>
+                </tr>
+              </thead>
+              <tbody>
+              {% if admin %}
+                {% for news in news_list %}
+                <tr>
+
+                    <td><a href="/master/category/{{ news.category.id }}/">{{ news.category.name }}</a></td>
+                    <td><a href="/master/newsdetail/{{ news.id }}" target="_blank">{{ news.title }}</a></td>
+                    <td>{{ news.author.admin_name }}</td>
+                    <td>{{ news.create_date|date:"Y,n月j日,G:i" }}</td>
+                    <td><a href="/master/editnews/{{ news.id }}">编辑</a></td>
+                    <td><a href="/master/deletenews/{{ news.id }}/">删除</a></td>
+                </tr>
+              {% endfor %}
+            {% endif %}
+             {% if not admin %}
+                 {% for news in my_news %}
+                <tr>
+                    <td><a href="/master/category/{{ news.category.id }}/">{{ news.category.name }}</a></td>
+                    <td><a href="/master/newsdetail/{{ news.id }}" target="_blank">{{ news.title }}</a></td>
+                    <td>{{ news.author.admin_name }}</td>
+                    <td>{{ news.create_date|date:"Y,n月j日,G:i" }}</td>
+                    <td><a href="/master/editnews/{{ news.id }}">编辑</a></td>
+                    <td><a href="/master/deletenews/{{ news.id }}/">删除</a></td>
+                </tr>
+              {% endfor %}
+              {% endif %}
+              </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

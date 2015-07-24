@@ -1,0 +1,65 @@
+{% extends 'student/base.html' %}
+{% block title %}后台管理{% endblock %}
+{{% block content %}
+    {% load static %}
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        {% if message %}
+        <h3 class="sub-header">{{ message }}</h3>
+        {% endif %}
+        {%  if allow_choose %}
+        <h3 class="sub-header">当前待选的课程有</h3>
+        <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>课程名称</th>
+                  <th>课程时长</th>
+                  <th>面向年级</th>
+                  <th>添加日期</th>
+                  <th>课程状态</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for clas in class_not_choose %}
+                    <tr>
+                        <td>{{ clas.class_name }}</td>
+                        <td>{{ clas.class_hours }}</td>
+                        <td>{{ clas.class_for }}</td>
+                        <td>{{ clas.add_date|date:"Y,n月j日,G:i" }}</td>
+                        <td>{{ clas.is_closed }}</td>
+                        <td><a  href="/student/stuclassedit/join/{{ clas.class_id }}">选择</a></td>
+                    </tr>
+                {% endfor %}
+               </tbody>
+            </table>
+        </div>
+        {% endif %}
+        <h3 class="sub-header">当前已选的课程有</h3>
+        <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>课程名称</th>
+                  <th>课程时长</th>
+                  <th>面向年级</th>
+                  <th>添加日期</th>
+                  <th>课程状态</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for clas in class_choose %}
+                    <tr>
+                        <td>{{ clas.class_name }}</td>
+                        <td>{{ clas.class_hours }}</td>
+                        <td>{{ clas.class_for }}</td>
+                        <td>{{ clas.add_date }}</td>
+                        <td>{{ clas.is_closed }}</td>
+                        <td><a  href="/student/stuclassedit/quit/{{ clas.class_id }}">退选</a></td>
+                    </tr>
+                {% endfor %}
+               </tbody>
+            </table>
+            <h4>退选请谨慎，一旦退选，课程相关的实验记录会被删除！</h4>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends 'student/base.html' %}
+{% block title %}个人中心{% endblock %}
+{% block content %}
+    {% load static %}
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <script>
+        function beforedel(){
+            return confirm('是否确认删除，删除后需要重新提交实验报告!')
+        }
+    </script>
+        <h3 class="sub-header">{{ message }}</h3>
+        <h4 class="sub-header">课程详情</h4>
+            <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>课程名称</th>
+                    <th>学年学期</th>
+                    <th>课程总学时</th>
+                    <th>已完成的学时</th>
+                    <th>截至日期</th>
+                    <th>实验报告</th>
+                    <th>成绩</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                       <td>{{ stu_class.class_id.class_name }}</td>
+                       <td>{{ systime.startyear }}-{{ systime.endyear }}第{{ systime.semester }}学期</td>
+                       <td>{{ stu_class.class_id.class_hours }}</td>
+                       <td>{{ stu_class.already_hours }}</td>
+                        <td>{{ stu_class.deadline|date:"Y/n/j" }}</td>
+                       {% if stu_class.class_report %}
+                        {{ stu_class.class_report.url }}
+                       <td><a href="{{ stu_class.class_report.url }}" target="_blank">查看</a> <a href="/student/deleteclassreport/{{ stu_class.class_id.class_id}}/" onclick="return beforedel();">删除</a></td>
+                       {% endif %}
+                       {% if not stu_class.class_report %}
+                           <td>
+                       <form enctype="multipart/form-data" method="post" action="/student/stuclassreportupload/{{ stu_class.class_id.class_id }}/">
+                       {% csrf_token %} {{ form.as_p }} <input type="submit" value="提交"/>
+                       </form>
+                           </td>
+                       {% endif %}
+                        <td>{{ stu_class.class_grades }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+        <h4 class="sub-header">实验详情</h4>
+             {% if stu_do_exp_list %}
+                <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>实验时间</th>
+                    <th>签到时间</th>
+                    <th>登录地址</th>
+                    <th>结束时间</th>
+                    <th>实验报告</th>
+                    <th>教师留言</th>
+                    <th>教师评分</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for stu_do_exp in stu_do_exp_list %}
+                    <tr>
+                       <td>{{ stu_do_exp.stuseltime_id }}</td>
+                       <td>{{ stu_do_exp.start_time|date:"Y,n月j日,G:i" }}</td>
+                        <td>{{  stu_do_exp.stu_start_ip }}</td>
+                       <td>{{ stu_do_exp.end_time|date:"Y,n月j日,G:i" }}</td>
+                        {% if stu_do_exp.stu_exp_report %}
+                       <td><a href="{{ stu_do_exp.stu_exp_report.url }}">点击查看</a></td>
+                        {% endif %}
+                        {% if not stu_do_exp.stu_exp_report %}
+                            未提交
+                        {% endif  %}
+                        <td>{{ stu_do_exp.comment }}</td>
+                        <td>{{ stu_do_exp.exp_grade }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                </table>
+            {% endif %}
+    </div>
+{% endblock %}

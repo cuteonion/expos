@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% load staticfiles %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=50%, initial-scale=1">
+    <title>{% block title %}{% endblock %}</title>
+    <link href="{% static 'bootstrap/css/bootstrap.min.css'%}" rel="stylesheet">
+    <link href="{% static 'bootstrap/css/custom/dashboard.css' %}" rel="stylesheet">
+    <script src="{% static 'bootstrap/js/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+  </head>
+  <body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href=".">信号与图像处理实验室教学管理系统</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="{% url 'index' %}">首页</a></li>
+            <li><a href="{% url 'master:changepass' %}">修改密码</a></li>
+            <li><a href="{% url 'master:logout' %}">注销</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+              {% if admin %}
+            <li class="active"><a href="{% url 'master:syssetting' %}">系统设置<span class="sr-only">(current)</span></a>
+                <ul class="nav nav-sidebar">
+                    <li><a href="{% url 'master:systimeset' %}"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;系统时间</a></li>
+                    <li><a href="{% url 'master:openorclose' %}"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;开放选课</a></li>
+                </ul>
+            </li>
+              {% endif %}
+          <li class="active"><a href="{% url 'master:syssetting' %}">课程管理<span class="sr-only">(current)</span></a>
+                    <ul class="nav nav-sidebar">
+                    {% if admin %}
+                    <li><a href="{% url 'master:addclass' %}"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;添加课程</a></li>
+                          {% endif %}
+                    <li><a href="{% url 'master:showclasses' %}"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;课程管理</a></li>
+                    </ul>
+            </li>
+            <li class="active"><a href="">实验室开放时间管理<span class="sr-only">(current)</span></a>
+                    <ul class="nav nav-sidebar">
+                    {% if admin%}
+                    <li><a href="{% url 'master:addexproom' %}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;设置开放时间</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'master:viewexproom' %}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;查看开放时间</a></li>
+
+                    </ul>
+            </li>
+            <li class="active"><a href="{% url 'master:syssetting' %}">学生用户管理<span class="sr-only">(current)</span></a>
+                    <ul class="nav nav-sidebar">
+                        {% if admin %}
+                    <li><a href="{% url 'master:importstudents' %}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;导入学生信息</a></li>
+                        {% endif %}
+                    <li><a href="{% url 'master:addstubyhand' %}"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;手动添加学生信息</a></li>
+                    <li><a href="{% url 'master:viewstuinfo' %}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;学生信息查询</a></li>
+                    </ul>
+            </li>
+             {% if admin %}
+             <li class="active"><a href="">教师用户管理<span class="sr-only">(current)</span></a>
+                    <ul class="nav nav-sidebar">
+                    <li><a href="{% url 'master:addadmin' %}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;添加教师信息</a></li>
+                    <li><a href="{% url 'master:mastermanage' %}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;教师用户列表</a></li>
+                    </ul>
+             </li>
+             {% endif %}
+            <li class="active"><a href="">内容管理<span class="sr-only">(current)</span></a>
+                    <ul class="nav nav-sidebar">
+                    <li><a href="{% url 'master:addnews' %}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;发布文章</a></li>
+                    <li><a href="{% url 'master:viewnewslist' %}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;文章管理</a></li>
+                    {% if admin %}
+                    <li><a href="{% url 'master:addcategory' %}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;文章类别管理</a></li>
+                    {% endif %}
+                    </ul>
+            </li>
+        </ul>
+        </div>
+      </div>
+    </div>
+  {% block content %}
+  {% endblock %}
+  </body>
+</html>

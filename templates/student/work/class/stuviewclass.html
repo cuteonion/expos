@@ -1,0 +1,75 @@
+{% extends 'student/base.html' %}
+{% block title %}个人中心{% endblock %}
+{{% block content %}
+    {% load static %}
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+        <h4 class="sub-header">本学期课程</h4>
+            <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>课程名称</th>
+                    <th>学年学期</th>
+                    <th>课程学时</th>
+                    <th>已完成学时</th>
+                    <th>截止日期</th>
+                    <th>实验报告</th>
+                    <th>成绩</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for clas in class_this_term %}
+                    <tr>
+                       <td><a href="/student/stuclassdetail/{{ clas.class_id.class_id }}/"><h4 class="sub-header">{{ clas.class_id.class_name }}</h4></a></td>
+                       <td>{{ systime.startyear }}-{{ systime.endyear }}第{{ systime.semester }}学期</td>
+                       <td>{{ clas.class_id.class_hours }}</td>
+                       <td>{{ clas.already_hours }}</td>
+                        <td>{{ clas.class_id.deadline|date:"Y/n/j" }}</td>
+                       {% if clas.class_report %}
+                       <td><a href="{{ clas.class_report.url }}">查看</a></td>
+                       {% endif %}
+                       {% if not clas.class_report %}
+                       <td>未提交</td>
+                       {% endif %}
+                        <td>{{ clas.class_grades }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        <h5 class="sub-header">历史课程</h5>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>课程名称</th>
+                    <th>学年学期</th>
+                    <th>课程学时</th>
+                    <th>实验报告</th>
+                    <th>成绩</th>
+                    <th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for clas in class_ever %}
+                    <tr>
+                       <td><a href="/student/stuclassdetail/{{ clas.class_id.class_id }}/"><h4 class="sub-header">{{ clas.class_id.class_name }}</h4></a></td>
+                       <td>{{ systime.startyear }}-{{ systime.endyear }}第{{ systime.semester }}学期</td>
+                       <td>{{ clas.class_id.class_hours }}</td>
+                       {% if clas.is_finished %}
+                       <td><a href="{{ clas.class_report.url }}">查看</a></td>
+                       {% endif %}
+                       {% if not clas.is_finished %}
+                       <td>未提交</td>
+                       {% endif %}
+                        <td>{{ clas.class_grades }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>
+    </div>
+{% endblock %}

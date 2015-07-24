@@ -1,0 +1,17 @@
+{% extends 'master/base.html' %}
+{% block title %}后台管理{% endblock %}
+{% block content %}
+    {% load static %}
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    {% if message %}
+        <h3 class="sub-header">{{ message }}</h3>
+    {% endif %}
+    {% if form %}
+        <form action="/master/editadmin/{{ teacher.username }}/" method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="添加">
+        </form>
+    {% endif %}
+    </div>
+{% endblock %}

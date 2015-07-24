@@ -1,0 +1,74 @@
+{% extends 'master/base.html' %}
+{% block title %}后台管理{% endblock %}
+{{% block content %}
+    {% load static %}
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <h3 class="sub-header">课程详情</h3>
+    <h4 class="sub-header">本课程为{{ clas.startyear }}-{{ clas.endyear }}第{{ clas.semester }}学期</h4>
+    {% if message %}
+        <h3 class="sub-header">{{ message }}</h3>
+    {% endif %}
+    {% if admin %}
+    {% if form %}
+         <form method="POST" action="/master/editclass/{{ clas.class_id }}/">
+              {% csrf_token %}
+              {{ form.as_p }}
+                <br>
+               <p><b>任课教师:&nbsp;{{ clas.teacher_list }}</b></p>
+               <b>重新选择:&nbsp;</b>
+                {% for teacher in teacher_list %}
+                <input type="checkbox" value="{{ teacher.username }}" name="teacher_list"/>{{ teacher.admin_name }}&nbsp;
+                {% endfor %}
+                <br>
+              <input type="submit" value="修改">
+         </form>
+    {% endif %}
+    {% endif %}
+    <h3 class="sub-header">学生列表</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>学号</th>
+                    <th>姓名</th>
+                    <th>学年</th>
+                    <th>班级</th>
+                    <th>专业</th>
+                    <th>完成学时</th>
+                    <th>实验报告</th>
+                    <th>成绩</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% if student_list %}
+                    {% for stu_clas in student_list %}
+                    <tr>
+                       <td><a target="_blank" href="/master/commitstudentclass/{{ stu_clas.class_id.class_id }}/{{ stu_clas.stu_id.stu_auth_num }}" >{{ stu_clas.stu_id.stu_auth_num }}</a></td>
+                        <td>{{ stu_clas.stu_id.stu_name }}</td>
+                        <td>{{ stu_clas.stu_id.stu_grade }}</td>
+                       <td>{{ stu_clas.stu_id.stu_class }}</td>
+                        <td>{{  stu_clas.stu_id.stu_major }}</td>
+                       <td>{{ stu_clas.already_hours }}</td>
+                        {%  if stu_clas.class_report %}
+                            <td><a href="{{ stu_clas.class_report.url }}" target="_blank">点击查看</a></td>
+                        {% endif %}
+                        {%  if not stu_clas.class_report %}
+                            <td>未提交</td>
+                        {% endif %}
+                        <th>{{ stu_clas.class_grades }}</th>
+                    </tr>
+                    {% endfor %}
+                    {% endif %}
+                    {% if not student_list %}
+                        还没有学生选择此课程
+                    {% endif %}
+                </tbody>
+                </table>
+    <h3 class="sub-header">添加学生</h3>
+        <form method="post" action="{% url 'master:addstudenttoclass' %}">
+            {% csrf_token %}
+            {{ form2.as_p }}
+            <input type="hidden" name="classid" value="{{ clas.class_id }}">
+            <input type="submit" value="添加"/>
+        </form>
+    </div>
+{% endblock %}

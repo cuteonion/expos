@@ -1,0 +1,85 @@
+{% extends 'student/base.html' %}
+{% block title %}后台管理{% endblock %}
+{{% block content %}
+    {% load static %}
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        {% if allow_choose %}
+            {% if exproom_not_choose %}
+            <h3 class="sub-header">当前可选的时间有</h3>
+            <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>时间</th>
+                    <th>建议课程</th>
+                    <th>面向班级</th>
+                    <th>机位数量</th>
+                    <th>已选人数</th>
+                    <th>剩余座位</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <form method="post" action="{% url 'student:edit_exproom' %}">
+                        {% csrf_token %}
+                        <input value="join" type="hidden" name="action"/>
+                        {% for exproom in exproom_not_choose %}
+                            <tr>
+                                <td><input type="checkbox" value="{{ exproom.classroomid }}" name="join_list"/>{{ exproom }}</td>
+                                <td>{{ exproom.advise_class }}</td>
+                                <td>{{ exproom.force_major }}</td>
+                                <td>{{ exproom.machinenum }}</td>
+                                <td>{{ exproom.stu_num_now }}</td>
+                                <td>{{ exproom.yuliang }}</td>
+                            </tr>
+                        {% endfor %}
+                </tbody>
+            </table>
+                <input type="submit" value="选择"/>
+                    </form>
+            </div>
+            {% endif %}
+            {% if message_wuxuan %}
+                <h3 class="sub-header">{{ message_wuxuan }}</h3>
+            {% endif %}
+        {% endif %}
+        {% if message_not_allow %}
+        <h3 class="sub-header">{{ message_not_allow }}</h3>
+        {% endif %}
+{#        {% if message_weixuan %}#}
+{#        <h3 class="sub-header">{{ message_weixuan }}</h3>#}
+{#        {% endif %}#}
+        {% if exproom_choose %}
+        <h3 class="sub-header">当前已选的时间有</h3>
+        <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>时间</th>
+                    <th>建议课程</th>
+                    <th>面向班级</th>
+                    <th>机位数量</th>
+                    <th>已选人数</th>
+                    <th>剩余座位</th>
+                </tr>
+            </thead>
+            <tbody>
+                <form method="post" action="{% url 'student:edit_exproom' %}">
+                   {% csrf_token %}
+                   <input value="quit" type="hidden" name="action"/>
+                   {% for exproom in exproom_choose %}
+                      <tr>
+                      <td><input type="checkbox" value="{{ exproom.classroomid }}" name="quit_list"/>{{ exproom }}</td>
+                      <td>{{ exproom.advise_class }}</td>
+                      <td>{{ exproom.force_major }}</td>
+                      <td>{{ exproom.machinenum }}</td>
+                      <td>{{ exproom.stu_num_now }}</td>
+                      <td>{{ exproom.yuliang }}</td>
+                      </tr>
+                   {% endfor %}
+                   <tr><td><input type="submit" value="退选"/></td></tr>
+                </form>
+            </tbody>
+        </table>
+        {% endif %}
+    </div>
+{% endblock %}

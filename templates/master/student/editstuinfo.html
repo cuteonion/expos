@@ -1,0 +1,47 @@
+{% extends 'master/base.html' %}
+{% block title %}后台管理{% endblock %}
+{{% block content %}
+    {% load static %}
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    {% if message %}
+        <h4>{{ message }}</h4>
+        <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>姓名</th>
+                  <th>性别</th>
+                  <th>学号</th>
+                  <th>年级</th>
+                  <th>班级</th>
+                  <th>专业</th>
+                  <th>电话</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                    <td>{{ student.stu_name }}</td>
+                    <td>{{ student.stu_sex }}</td>
+                    <td>{{ student.stu_auth_num }}</td>
+                    <td>{{ student.stu_grade }}</td>
+                    <td>{{ student.stu_class }}</td>
+                    <td>{{ student.stu_major }}</td>
+                    <td>{{ student.stu_phone }}</td>
+                    <td><a href="/master/editstuinfo/{{ student.stu_auth_num }}">修改</a></td>
+                </tr>
+               </tbody>
+            </table>
+        </div>
+    {% endif %}
+    {% if form %}
+        <form action="/master/editstuinfo/{{ student.stu_auth_num }}/" method="POST">
+            {% csrf_token %}
+            <strong></strong>
+            <h4 class="sub-header">{{ student.stu_auth_num }}</h4>
+            <br>
+            {{ form.as_p }}
+            <input type="submit" value="确认修改"/>
+        </form>
+    {% endif %}
+    </div>
+{% endblock %}

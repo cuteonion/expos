@@ -1,0 +1,53 @@
+{% extends 'master/base.html' %}
+{% block title %}后台管理{% endblock %}
+{% block content %}
+    {% load static %}
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    {% if message %}
+        {{ message }}
+    {% endif %}
+    {% if form %}
+    <form method="POST" action="{% url 'master:addexproom' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="添加">
+    </form>
+    {% endif %}
+    {% if exproom_list %}
+        <h4 class="sub-header">当前学期教室开放情况</h4>
+        <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>教学周数</th>
+                  <th>星期</th>
+                  <th>起始节次</th>
+                  <th>结束节次</th>
+                  <th>上课教室</th>
+                  <th>机位数量</th>
+                  <th>限选课程</th>
+                  <th>限选专业</th>
+                  <th>已选人数</th>
+                </tr>
+              </thead>
+              <tbody>
+              {% for room in exproom_list %}
+                <tr>
+                    <td>第{{ room.week }}周</td>
+                    <td>周{{ room.weekday }}</td>
+                    <td>第{{ room.startclass }}节</td>
+                    <td>第{{ room.endclass }}节</td>
+                    <td>4#{{ room.roomnum }}</td>
+                    <td>{{ room.machinenum }}</td>
+                    <td>{{ room.advise_class }}</td>
+                    <td>{{ room.force_major }}</td>
+                    <td>{{ room.stu_num_now }}</td>
+                    <td><a href="/master/editexproom/{{ room.classroomid }}">修改</a></td>
+                </tr>
+              {% endfor %}
+               </tbody>
+            </table>
+        </div>
+    {% endif %}
+    </div>
+{% endblock %}

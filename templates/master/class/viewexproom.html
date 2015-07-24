@@ -1,0 +1,48 @@
+{% extends 'master/base.html' %}
+{% block title %}后台管理{% endblock %}
+{{% block content %}
+    {% load static %}
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <h3 class="sub-header">本学期教室开放情况</h3>
+        <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>教学周数</th>
+                  <th>星    期</th>
+                  <th>起始节次</th>
+                  <th>结束节次</th>
+                  <th>上课教室</th>
+                  <th>机位数量</th>
+                  <th>限选课程</th>
+                  <th>限选专业</th>
+                  <th>已选人数</th>
+                </tr>
+              </thead>
+              <tbody>
+              {% for room in exproom_list %}
+                <tr>
+                    <td>第{{ room.week }}周</td>
+                    <td>周{{ room.weekday }}</td>
+                    <td>第{{ room.startclass }}节</td>
+                    <td>第{{ room.endclass }}节</td>
+                    <td>4#{{ room.roomnum }}</td>
+                    <td>{{ room.machinenum }}</td>
+                    <td>{{ room.advise_class }}</td>
+                    <td>{{ room.force_major }}</td>
+                    <td>{{ room.stu_num_now }}</td>
+                    <td><a href="/master/editexproom/{{ room.classroomid }}">信息修改</a></td>
+                    <td><a href="/master/studoexpcomment/{{ room.classroomid }}/">学生列表</a></td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+        </div>
+        <h4 class="sub-header">其他学年</h4>
+        <form action="{% url 'master:viewexproom' %}" method="post">
+            {% csrf_token %}
+            {{ form.as_table }}
+            <input type="submit" value="查询"/>
+        </form>
+    </div>
+{% endblock %}

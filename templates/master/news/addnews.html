@@ -1,0 +1,28 @@
+{% extends 'master/base.html' %}
+{% block title %}添加新闻{% endblock %}
+{{% block content %}
+    {% load static %}
+
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            {{ message }}
+        {% if form %}
+        <h3 class="sub-header">发布新闻</h3>
+
+        <form enctype="multipart/form-data" method="post" action="{% url 'master:addnews' %}">
+            {% csrf_token %}
+            {{ form.media }}
+            {{ form.as_p }}
+            <input type="submit" value="发布"/>
+        </form>
+        {% endif %}
+        {% if news %}
+            <h3 class="sub-header">{{ news.title }}</h3>
+            <h5 class="sub-header">发布人:{{ news.author }}&nbsp;&nbsp;发布时间:{{ news.create_date|date:"Y,n月j日,G:i" }}</h5>
+            {{ news.contents|safe }}
+            {% if news.attachment %}
+             <a href="{{ news.attachment.url }}" target="_blank">查看附件</a>
+            {% endif %}
+        {% endif %}
+    </div>
+
+{% endblock %}

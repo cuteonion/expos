@@ -1,0 +1,8 @@
+Django==1.7
+mysql-python==1.2.3
+ipython==2.3.1
+Django-Bootstrap3==5.0.3
+xlrd==0.9.3
+reportlab==3.1.44
+django-cleanup==0.2.1
+DjangoUeditor==1.8.143

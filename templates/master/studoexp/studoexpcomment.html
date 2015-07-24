@@ -1,0 +1,121 @@
+{% extends 'master/base.html' %}
+{% block title %}学生列表{% endblock %}
+{{% block content %}
+    {% load static %}
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <h3 class="sub-header">学生列表</h3>
+        <h4 class="sub-header">当前实验时间: 第{{ exproom.week }}周，周{{ exproom.weekday }}, 第{{ exproom.startclass }} - {{ exproom.endclass }}节</h4>
+            <div class="table-responsive">
+            <table class="table table-striped">
+             <thead>
+                <tr align="center">
+                    <th>学号</th>
+                    <th>姓名</th>
+                    <th>座位号</th>
+                    <th>实验课程</th>
+                    <th>签到时间</th>
+                    <th>登录IP</th>
+                    <th>结束时间</th>
+                    <th>实验记录</th>
+                    <th>实验评分</th>
+                    <th>教师留言</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for exp in stu_mine %}
+                <tr>
+                    <form method="get" action="/master/commitexp/{{ exp.stu_id.stu_auth_num }}/{{ exp.stuseltime_id.exproom_id.classroomid }}/">
+                    {% csrf_token %}
+                    <td>{{ exp.stu_id.stu_auth_num }}</td>
+                    <td>{{ exp.stu_id.stu_name }}
+                    <td>{{ exp.stuseltime_id.seat_num }}</td>
+                    <td>{{ exp.stu_class.class_id }}</td>
+                    <td>{{ exp.start_time|date:"Y,n月j日,G:i" }}</td>
+                    <td>{{ exp.stu_start_ip }}</td>
+                    <td>{{ exp.end_time|date:"Y,n月j日,G:i" }}</td>
+                    {% if exp.stu_exp_report %}
+                    <td><a href="{{ exp.stu_exp_report.url }}" target="_blank">查看</a></td>
+                    {% endif %}
+                    {% if not exp.stu_exp_report %}
+                    <td>未提交</td>
+                    {% endif %}
+                    {% if exp.exp_grade %}
+                    <td><input type="text" style="width:45px;height:25px" value="{{ exp.exp_grade }}" name="exp_grades" />&nbsp;<input type="submit" value="修改"/></td>
+                    {% endif %}
+                    {% if not exp.exp_grade %}
+                    <td><input type="text" style="width:45px;height:25px" value="" name="exp_grades" />&nbsp;<input type="submit" value="点评"/></td>
+                    {% endif %}
+                    {% if exp.comment %}
+                    <td><input type="text" style="width:100px;height:25px" value="{{ exp.comment }}"  name="exp_comment" />&nbsp;<input type="submit" value="修改"/></td>
+                    {% endif %}
+                    {% if not exp.comment %}
+                    <td><input type="text" style="width:100px;height:25px" value="" height="1px" name="exp_comment" />&nbsp;<input type="submit" value="点评"/></td>
+                    {% endif %}
+                     </form>
+                {% endfor %}
+                </tr>
+                    {% for exp in stu_others %}
+                <tr>
+                    <td>{{ exp.stu_id.stu_auth_num }}</td>
+                    <td>{{ exp.stu_id.stu_name }}
+                    <td>{{ exp.stuseltime_id.seat_num }}</td>
+                    <td>{{ exp.stu_class.class_id }}</td>
+                    <td>{{ exp.start_time|date:"Y,n月j日,G:i" }}</td>
+                    <td>{{ exp.stu_start_ip }}</td>
+                    <td>{{ exp.end_time|date:"Y,n月j日,G:i" }}</td>
+                    {% if not admin %}
+                    <td></td>
+                        <td>{{ exp.comment }}</td>
+                    {% endif %}
+                {% if admin %}
+                    {% if exp.stu_exp_report %}
+                    <td><a href="{{ exp.stu_exp_report.url }}" target="_blank">查看</a></td>
+                    {% endif %}
+                        {% if exp.comment %}
+                    <td><input type="text" width="1px" value="{{ exp.comment }}" height="1px" name="exp_comment" />&nbsp;<input type="submit" value="修改"/></td>
+                    {% endif %}
+
+                    {% if not exp.comment %}
+                    <td><input type="text" width="1px" value="" height="1px" name="exp_comment" />&nbsp;<input type="submit" value="点评"/></td>
+                    {% endif %}
+                {% endif %}
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        {% if stu_not_start %}
+            <h3 class="sub-header">已下同学还未开始实验</h3>
+            <div class="table-responsive">
+            <table class="table table-striped">
+             <thead>
+                <tr>
+                    <th>学号</th>
+                    <th>姓名</th>
+                    <th>座位号</th>
+                </tr>
+             </thead>
+             <tbody>
+                {% for exp in stu_not_start %}
+                    <tr>
+                    <td>{{ exp.stu_id.stu_auth_num }}</td>
+                    <td>{{ exp.stu_id.stu_name }}
+                    <td>{{ exp.seat_num }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            </table>
+            </div>
+        {% endif %}
+        <h3 class="sub-header">添加学生到此时间</h3>
+        {% if existmessage %}
+            {{ existmessage }}
+        {% endif %}
+        <form method="post" action="{% url 'master:addstudenttoexproom' %}">
+            {% csrf_token %}
+            {{ form1.as_p }}
+            <input type="hidden" value="{{ exproom.classroomid }}" name="exproomid"/>
+            <input type="submit" value="添加"/>
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% load staticfiles %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=50%, initial-scale=1">
+    <title>查看详情</title>
+    <link href="{% static 'bootstrap/css/bootstrap.min.css'%}" rel="stylesheet">
+    <link href="{% static 'bootstrap/css/custom/dashboard.css' %}" rel="stylesheet">
+    <script src="{% static 'bootstrap/js/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+     <script language="javascript">
+        function custom_close(){
+                    window.open('','_self');
+                    window.close();
+                    }
+    </script>
+  </head>
+  <body>
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href=".">信号与图像处理实验室教学管理系统</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="{% url 'index' %}">首页</a></li>
+            <li><a href="{% url 'master:changepass' %}">修改密码</a></li>
+            <li><a href="{% url 'master:logout' %}">注销</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    {% load static %}
+    <div class="col-sm-9 col-sm-offset-5 col-md-10 col-md-offset-1 main">
+        {% if message %}
+            {{ message }}
+        {% endif %}
+        <h4 class="sub-header">{{ student.stu_auth_num }},{{ student.stu_name }},{{ classid.class_name }}</h4>
+        <form method="post" action="/master/commitstudentclass/{{ classid.class_id }}/{{ student.stu_auth_num }}/">
+            {% csrf_token %}
+            <p><b>教师评分:<input style="width:40px;height: 25px" type="text" name="class_grades" value="{{ stu_class.class_grades }}"/></b></p>
+             <p><b>教师点评:<input style="width:200px;height: 25px" type="text" name="teacher_commit" value="{{ stu_class.teacher_commit }}"/></b></p>
+            <br>&nbsp;&nbsp;<input type="submit" value="提交"/>&nbsp;&nbsp;&nbsp;&nbsp;
+            <input id="btnClose" type="button" value="关闭" onClick="custom_close()" />
+        </form>
+    <br>
+        {% if not  stu_class.class_report %}
+        <h4 class="sub-header">提交实验报告</h4>
+        <form enctype="multipart/form-data" method="post" action="/master/stuclassreportupload/{{ stu_class.class_id.class_id }}/{{ student.stu_auth_num }}/">
+        {% csrf_token %} {{ form1.as_p }} <input type="submit" value="提交"/>
+        </form>
+        {% endif %}
+        {% if stu_class.class_report %}
+        <h4 class="sub-header"><a href="{{ stu_class.class_report.url }}" target="_blank">查看实验报告</a></h4>
+        {% endif %}
+        <h4 class="sub-header">实验列表</h4>
+            <div class="table-responsive">
+            <table class="table table-striped">
+             <thead>
+                <tr>
+                    <th>实验时间</th>
+                    <th>座位号</th>
+                    <th>实验课程</th>
+                    <th>签到时间</th>
+                    <th>登录IP</th>
+                    <th>结束时间</th>
+                    <th>实验记录</th>
+                    <th>评分</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% if stu_exp_list %}
+                {% for exp in stu_exp_list %}
+                <tr>
+                <form action="/master/commitexp/{{ exp.stu_id.stu_auth_num }}/{{ exp.stuseltime_id.exproom_id.classroomid }}/" method="post">
+                    {% csrf_token %}
+                    <td>{{ exp.stuseltime_id.exproom_id }}</td>
+                    <td>{{ exp.stuseltime_id.seat_num }}</td>
+                    <td>{{ exp.stu_class.class_id }}</td>
+                    <td>{{ exp.start_time|date:"Y,n月j日,G:i" }}</td>
+                    <td>{{ exp.stu_start_ip }}</td>
+                    <td>{{ exp.end_time|date:"Y,n月j日,G:i" }}</td>
+                    {% if exp.stu_exp_report %}
+                    <td><a target="_blank" href="{{ exp.stu_exp_report.url }}">查看</a></td>
+                    {% endif %}
+
+                    {% if not exp.stu_exp_report %}
+                    <td>未提交</td>
+                    {% endif %}
+
+                    {% if exp.exp_grade %}
+                    <td><input type="text" width="1px" value="{{ exp.exp_grade }}" height="1px" name="exp_grades" />&nbsp;<input type="submit" value="修改"/></td>
+                    {% endif %}
+
+                    {% if not exp.exp_grade %}
+                    <td><input type="text" width="1px" value="" height="1px" name="exp_grades" />&nbsp;<input type="submit" value="评分"/></td>
+                    {% endif %}
+                </form>
+                </tr>
+                {% endfor %}
+                {% endif %}
+                </tbody>
+            </table>
+            </div>
+    </div>
+</body>
+</html>
